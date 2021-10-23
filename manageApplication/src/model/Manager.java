@@ -1,17 +1,19 @@
 package model;
 
 import java.io.Serializable;
-public class User implements Serializable{
+
+public class Manager implements Serializable{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
 	private String userName;
 	private String passWord;
 	private String type;
 
-	public User(String type, String userName, String passWord) {
+	public Manager(String type, String userName, String passWord) {
 		this.userName = userName;
 		this.passWord = passWord;
 		this.type = type;
@@ -43,7 +45,8 @@ public class User implements Serializable{
 
 	@Override
 	public String toString() {
-		return "User [userName=" + userName + ", passWord=" + passWord + ", type=" + type + "]";
+		return "Manager [userName=" + userName + ", passWord=" + passWord + ", type=" + type + "]";
 	}
+	
 
 }
