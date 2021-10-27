@@ -1,7 +1,6 @@
 package controller;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -22,14 +21,9 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import model.Administrator;
-import model.AdministratorStore;
 import model.Stores;
 import model.Unitable;
-import model.Manager;
-import model.ManagerStore;
 import model.User;
-import model.UserStore;
 
 public class SignUpController implements Initializable {
 

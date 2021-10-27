@@ -1,0 +1,5 @@
+Name: Rinku sarkar
+github: https://github.com/sarkr72
+
+I used treeMap for all users, managers and administrator because there is no specific number of 
+users, managers or administrator given. The big O for treeMap for get and contains key is (log n).

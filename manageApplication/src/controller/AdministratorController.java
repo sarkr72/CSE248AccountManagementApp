@@ -5,7 +5,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
-import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -107,7 +106,7 @@ public class AdministratorController implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		userNameCol.setCellValueFactory(new PropertyValueFactory<Unitable, String>("userName"));
-		passWordCol.setCellValueFactory(new PropertyValueFactory<Unitable, String>("passWord"));
+//		passWordCol.setCellValueFactory(new PropertyValueFactory<Unitable, String>("passWord"));
 		typeCol.setCellValueFactory(new PropertyValueFactory<Unitable, String>("type"));
 		ObservableList<Unitable> list = FXCollections.observableArrayList(Stores.getAccounts().values());
 		tableView.setItems(list);

@@ -29,8 +29,6 @@ import model.Stores;
 import model.Unitable;
 
 public class ManagerViewController implements Initializable {
-
-	private String userName = LogInController.userName;
 	
 	private TreeMap<String, Unitable> accounts = Stores.getAccounts();
 	@FXML
@@ -90,7 +88,7 @@ public class ManagerViewController implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		userNameCol.setCellValueFactory(new PropertyValueFactory<Unitable, String>("userName"));
-		passWordCol.setCellValueFactory(new PropertyValueFactory<Unitable, String>("passWord"));
+//		passWordCol.setCellValueFactory(new PropertyValueFactory<Unitable, String>("passWord"));
 		typeCol.setCellValueFactory(new PropertyValueFactory<Unitable, String>("type"));
 		ObservableList<Unitable> list = FXCollections.observableArrayList(Stores.getAccounts().values());
 		tableView.setItems(list);

@@ -7,11 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import model.Administrator;
-import model.Manager;
 import model.Stores;
-import model.Unitable;
-import model.User;
 
 public class Main extends Application{
 	
