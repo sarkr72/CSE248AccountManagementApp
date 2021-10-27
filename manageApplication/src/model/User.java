@@ -1,7 +1,7 @@
 package model;
 
 import java.io.Serializable;
-public class User implements Serializable{
+public class User implements Serializable, Unitable{
 
 	/**
 	 * 
@@ -11,7 +11,7 @@ public class User implements Serializable{
 	private String passWord;
 	private String type;
 
-	public User(String type, String userName, String passWord) {
+	public User(String userName, String passWord, String type) {
 		this.userName = userName;
 		this.passWord = passWord;
 		this.type = type;

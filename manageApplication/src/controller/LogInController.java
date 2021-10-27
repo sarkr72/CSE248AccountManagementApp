@@ -1,10 +1,16 @@
 package controller;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -13,19 +19,13 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import model.AdministratorStore;
-import model.GetStores;
-import model.ManagerStore;
-import model.UserStore;
+import model.Stores;
 
-public class LogInController {
+public class LogInController implements Initializable {
 
-	private UserStore userStore = GetStores.getUserStore();
-	private ManagerStore managerStore = GetStores.getManagerStore();
-	private AdministratorStore administratorStore = GetStores.getAdministratorStore();
 	public static String userName;
 	private String passWord;
-
+	
 	@FXML
 	private TextField userNameField;
 
@@ -48,32 +48,37 @@ public class LogInController {
 	void signIn(ActionEvent event) throws IOException {
 		userName = userNameField.getText().toLowerCase();
 		passWord = passWordField.getText();
-		if (userStore.getUsers().containsKey(userName)) {
-			if (userStore.getUsers().get(userName).getPassWord().compareTo(passWord) == 0) {
+		if (Stores.getAccounts().containsKey(userName)) {
+			if (Stores.getAccounts().get(userName).getType().compareTo("manager") == 0
+					&& Stores.getAccounts().get(userName).getPassWord().compareTo(passWord) == 0) {
+				changeScene(event, "/view/ManagerView.fxml");
+			} else if (Stores.getAccounts().get(userName).getPassWord().compareTo(passWord) == 0
+					&& Stores.getAccounts().get(userName).getType().compareTo("administrator") == 0) {
+				changeScene(event, "/view/Administrator.fxml");
+			} else if (Stores.getAccounts().get(userName).getPassWord().compareTo(passWord) == 0
+					&& Stores.getAccounts().get(userName).getType().compareTo("user") == 0) {
+				userNameLabel.setText("");
+				passwordLabel.setText("");
 				showLabel.setText("Log In Successful");
 			} else {
-				passwordLabel.setText("Password is incorrect");
-			}
-		} else if (managerStore.getManagers().containsKey(userName)) {
-			if (managerStore.getManagers().get(userName).getPassWord().compareTo(passWord) == 0) {
-				changeScene(event, "/view/ManagerLoggedInView.fxml");
-			} else {
-				passwordLabel.setText("Password is incorrect");
-			}
-		} else if (administratorStore.getAdministrators().containsKey(userName)) {
-			if (administratorStore.getAdministrators().get(userName).getPassWord().compareTo(passWord) == 0) {
-				changeScene(event, "/view/ManagerLoggedInView.fxml");
-			} else {
+				userNameLabel.setText("");
+				showLabel.setText("");
 				passwordLabel.setText("Password is incorrect");
 			}
 		} else {
-			userNameLabel.setText("userName couldn't be recoznized");
+			userNameLabel.setText("Username isn't recoznized");
 		}
 	}
 
 	@FXML
-	void exit(ActionEvent event) {
-
+	void exit(ActionEvent event) throws IOException {
+		File file = new File("Accounts.dat");
+		FileOutputStream fos = new FileOutputStream(file);
+		ObjectOutputStream dos = new ObjectOutputStream(fos);
+		dos.writeObject(Stores.getAccounts());
+		dos.close();
+		fos.close();
+		System.exit(0);
 	}
 
 	@FXML
@@ -83,7 +88,7 @@ public class LogInController {
 
 	public void changeScene(ActionEvent event, String str) throws IOException {
 		FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(getClass().getResource("str"));
+		loader.setLocation(getClass().getResource(str));
 		Parent root = loader.load();
 		Scene scene = new Scene(root, 600, 600);
 		Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -91,5 +96,12 @@ public class LogInController {
 		window.setHeight(600);
 		window.setScene(scene);
 		window.show();
+	}
+
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+//		userStore = Stores.getUserStore();
+//		managerStore = Stores.getManagerStore();
+//		administratorStore = Stores.getAdministratorStore();
 	}
 }

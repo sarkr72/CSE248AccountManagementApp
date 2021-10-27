@@ -2,7 +2,7 @@ package model;
 
 import java.io.Serializable;
 
-public class Manager implements Serializable{
+public class Manager implements Serializable, Unitable{
 
 	/**
 	 * 
@@ -13,7 +13,7 @@ public class Manager implements Serializable{
 	private String passWord;
 	private String type;
 
-	public Manager(String type, String userName, String passWord) {
+	public Manager(String userName, String passWord, String type) {
 		this.userName = userName;
 		this.passWord = passWord;
 		this.type = type;

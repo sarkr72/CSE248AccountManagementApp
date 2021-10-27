@@ -1,10 +1,18 @@
 package controller;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.TreeMap;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -16,21 +24,19 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.Administrator;
 import model.AdministratorStore;
-import model.GetStores;
+import model.Stores;
+import model.Unitable;
 import model.Manager;
 import model.ManagerStore;
 import model.User;
 import model.UserStore;
 
-public class SignUpController {
+public class SignUpController implements Initializable {
 
-	private UserStore userStore = GetStores.getUserStore();
-	private ManagerStore managerStore = GetStores.getManagerStore();
-	private AdministratorStore administratorStore = GetStores.getAdministratorStore();
 	private String userName;
 	private String passWord;
 	private String type;
-
+	private TreeMap<String, Unitable> accounts = Stores.getAccounts();
 	@FXML
 	private Pane pane;
 	@FXML
@@ -52,65 +58,48 @@ public class SignUpController {
 	private Label showLabel;
 
 	@FXML
-	void backToLogIn(ActionEvent event) {
-
+	void backToLogIn(ActionEvent event) throws IOException {
+		File file = new File("Accounts.dat");
+		FileOutputStream fos = new FileOutputStream(file);
+		ObjectOutputStream dos = new ObjectOutputStream(fos);
+		dos.writeObject(accounts);
+		dos.close();
+		fos.close();
+		changeScene(event,  "/view/LogInView.fxml");
 	}
 
 	@FXML
 	void signUp(ActionEvent event) throws IOException {
-		if (userStore.getUsers().containsKey(userName) || managerStore.getManagers().containsKey(userName)
-				|| administratorStore.getAdministrators().containsKey(userName))
+		userName = userNameField.getText().toLowerCase();
+		passWord = passWordField.getText();
+
+		if (Stores.getAccounts().containsKey(userName) || Stores.getAccounts().containsKey(userName)
+				|| Stores.getAccounts().containsKey(userName))
 
 		{
-			if (userStore.getUsers().containsKey(userName)) {
-				if (passWord.length() < 8) {
-					passwordLabel.setText("Enter at least 8 characters");
-				} else if (!passWord.matches("?=.*[A-Z]")) {
-					passwordLabel.setText("Enter at least one capitol letter");
-				} else if (!passWord.matches("?=.*[a-z]")) {
-					passwordLabel.setText("Enter at least one lowerCase letter");
-				} else if (!passWord.matches("?=.*\\d")) {
-					passwordLabel.setText("Enter at least one digit");
-				} else {
-					type = "user";
-					userStore.add(new User(userName, passWord, type));
-					changeScene(event, "/view/LogInView.fxml");
-				}
-			} else if (managerStore.getManagers().containsKey(userName)) {
-				if (passWord.length() < 8) {
-					passwordLabel.setText("Enter at least 8 characters");
-				} else if (!passWord.matches("?=.*[A-Z]")) {
-					passwordLabel.setText("Enter at least one capitol letter");
-				} else if (!passWord.matches("?=.*[a-z]")) {
-					passwordLabel.setText("Enter at least one lowerCase letter");
-				} else if (!passWord.matches("?=.*\\d")) {
-					passwordLabel.setText("Enter at least one digit");
-				} else {
-					type = "manager";
-					managerStore.add(new Manager(userName, passWord, type));
-					changeScene(event, "/view/LogInView.fxml");
-				}
-			} else if (administratorStore.getAdministrators().containsKey(userName)) {
-				if (passWord.length() < 8) {
-					passwordLabel.setText("Enter at least 8 characters");
-				} else if (!passWord.matches("?=.*[A-Z]")) {
-					passwordLabel.setText("Enter at least one capitol letter");
-				} else if (!passWord.matches("?=.*[a-z]")) {
-					passwordLabel.setText("Enter at least one lowerCase letter");
-				} else if (!passWord.matches("?=.*\\d")) {
-					passwordLabel.setText("Enter at least one digit");
-				} else {
-					type = "administrator";
-					administratorStore.add(new Administrator(userName, passWord, type));
-					changeScene(event, "/view/LogInView.fxml");
-				}
+			userNameLabel.setText("userName already exists");
+		} else {
+			userNameLabel.setText("");
+			if (passWord.length() < 8) {
+				passwordLabel.setText("Enter at least 8 characters");
+			} else if (!passWord.matches(".*[A-Z].*")) {
+				passwordLabel.setText("Enter at least one capitol letter");
+			} else if (!passWord.matches(".*[a-z].*")) {
+				passwordLabel.setText("Enter at least one lowerCase letter");
+			} else if (!passWord.matches(".*\\d.*")) {
+				passwordLabel.setText("Enter at least one digit");
+			} else {
+				type = "user";
+				Unitable user = new User(userName, passWord, type);
+				Stores.getAccounts().put(userName, user);
+				changeScene(event, "/view/LogInView.fxml");
 			}
 		}
 	}
-	
+
 	public void changeScene(ActionEvent event, String str) throws IOException {
 		FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(getClass().getResource("str"));
+		loader.setLocation(getClass().getResource(str));
 		Parent root = loader.load();
 		Scene scene = new Scene(root, 600, 600);
 		Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -118,6 +107,11 @@ public class SignUpController {
 		window.setHeight(600);
 		window.setScene(scene);
 		window.show();
+	}
+
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+
 	}
 
 }
